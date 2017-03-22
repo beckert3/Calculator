@@ -2,9 +2,6 @@ package self.calculator;
 
 import android.widget.TextView;
 
-/**
- * Created by beckert3 on 2/3/17.
- */
 public class TextController {
 
     private TextView textEquation;
@@ -56,8 +53,10 @@ public class TextController {
     }
 
     public void AppendDecimal() {
-        if(textEquation.getText().charAt(textEquation.length() - 1) != '.') {
-            textEquation.append(".");
+        if(!clearNextAppend) {
+            if (textEquation.getText().charAt(textEquation.length() - 1) != '.') {
+                textEquation.append(".");
+            }
         }
     }
 
