@@ -1,16 +1,22 @@
 package self.calculator;
 
+import android.util.Log;
+
 /**
  * Created by beckert3 on 2/19/17.
  */
 public class Equation {
 
+    final String TAG = "Equation";
+
     private CharSequence equation;
     private boolean solved;
+    private int sigFigs;
 
     public Equation(CharSequence eq) {
         equation = eq;
         solved = false;
+        sigFigs = 0;
     }
 
     public CharSequence getEquation() {
@@ -27,6 +33,12 @@ public class Equation {
 
     public String getSubString(int start, int stop) {
         return equation.toString().substring(start, stop);
+    }
+
+    public boolean charAtIndexIsNumber(int i) {
+        return (getCharAt(i) == '0' || getCharAt(i) == '1' || getCharAt(i) == '2' || getCharAt(i) == '3' ||
+                getCharAt(i) == '4' || getCharAt(i) == '5' || getCharAt(i) == '6' || getCharAt(i) == '7' ||
+                getCharAt(i) == '8' || getCharAt(i) == '9');
     }
 
     public boolean charAtIndexIsOperator(int i) {
@@ -68,6 +80,31 @@ public class Equation {
                 }
             }
         }
+    }
+
+    public void countSigFigs() {
+        // counts significant figures
+        for (int i = 0; i < equation.length(); i++) {
+            if (getCharAt(i) == '.') {
+                int count = 0;
+
+                for (int j = i + 1; j < equation.length(); j++) {
+                    if(charAtIndexIsOperator(j) || charAtIndexIsParenthesis(j)) {
+                        break;
+                    }
+
+                    if (charAtIndexIsNumber(j)) {
+                        count++;
+                    }
+
+                    if (count > sigFigs) {
+                        sigFigs = count;
+                    }
+                }
+            }
+        }
+
+        Log.v(TAG, "" + sigFigs);
     }
 
     //Should only be called if the user enters a number to be calculated, rather than an equation
@@ -144,6 +181,7 @@ public class Equation {
 
         if(leftEqSequence.length() == 0 && rightEqSequence.length() == 0 && getCharAt(0) != '(') {
             solved = true;
+            result = String.format("%." + sigFigs + "f", Double.parseDouble(result));
         }
 
         equation = leftEqSequence + result + rightEqSequence;

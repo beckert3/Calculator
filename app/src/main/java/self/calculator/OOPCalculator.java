@@ -24,6 +24,7 @@ public class OOPCalculator {
         int count = 0;
 
         equation.checkForMultiplyShorthand();
+        equation.countSigFigs();
 
         while (!equation.isSolved()) {
             numLayers = CountLayers(equation.getEquation());
